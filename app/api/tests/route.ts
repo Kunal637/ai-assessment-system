@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllTests, createTest, initializeDummyData } from '@/utils/dataManager';
+import { getAllTests, createTest } from '@/utils/dataManager';
 
 export async function GET() {
   try {
-    // Initialize dummy data if needed
-    initializeDummyData();
-    
     const tests = getAllTests();
     return NextResponse.json(tests);
   } catch (error) {

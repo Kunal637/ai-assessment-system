@@ -1,16 +1,5 @@
 [
   {
-    "id": "c1",
-    "name": "John Doe",
-    "email": "john.doe@example.com",
-    "assignedTests": [
-      "yqr6uukjvmdn25fsq",
-      "t1",
-      "f5vuahy5dmdkufbya"
-    ],
-    "createdAt": "2025-07-27T16:30:33.689Z"
-  },
-  {
     "name": "Kunal",
     "email": "Kunalsukhani333@gmail.com",
     "assignedTests": [

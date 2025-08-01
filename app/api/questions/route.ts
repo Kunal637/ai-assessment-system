@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAllQuestions, createQuestion, initializeDummyData } from '@/utils/dataManager';
+import { getAllQuestions, createQuestion } from '@/utils/dataManager';
 import { Question } from '@/types';
 
 export async function GET() {
   try {
-    // Initialize dummy data if needed
-    initializeDummyData();
-    
     const questions = getAllQuestions();
+    console.log('API: Returning', questions.length, 'questions');
     return NextResponse.json(questions);
   } catch (error) {
     console.error('Error fetching questions:', error);

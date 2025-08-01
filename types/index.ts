@@ -9,6 +9,10 @@ export interface Question {
   language?: string;
   points: number;
   timeLimit?: number; // in seconds
+  explanation?: string;
+  hints?: string[];
+  difficulty?: 'easy' | 'medium' | 'hard';
+  category?: string;
   createdAt: string;
   updatedAt: string;
 }

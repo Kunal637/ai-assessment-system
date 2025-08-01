@@ -146,12 +146,12 @@ export default function CandidateDetailPage() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-4">
-                          <button 
+            <button 
                 onClick={() => router.push('/assessments/candidates')}
-                className="text-gray-400 hover:text-gray-600"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
+              className="text-gray-400 hover:text-gray-600"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
             <div>
               <h1 className="text-3xl font-bold text-gray-900">{candidate.name}</h1>
               <div className="flex items-center gap-4 text-gray-600">

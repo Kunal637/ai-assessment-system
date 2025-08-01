@@ -12,7 +12,8 @@ import {
   ArrowLeft,
   Eye,
   Edit,
-  Trash2
+  Trash2,
+  RefreshCw
 } from 'lucide-react';
 import { Question, Test, Candidate } from '@/types';
 import Navigation from '@/components/Navigation';
@@ -29,16 +30,19 @@ export default function HRDashboard() {
 
   const fetchData = async () => {
     try {
+      // Add cache-busting parameter to ensure fresh data
+      const timestamp = new Date().getTime();
       const [questionsRes, testsRes, candidatesRes] = await Promise.all([
-        fetch('/api/questions'),
-        fetch('/api/tests'),
-        fetch('/api/candidates')
+        fetch(`/api/questions?t=${timestamp}`),
+        fetch(`/api/tests?t=${timestamp}`),
+        fetch(`/api/candidates?t=${timestamp}`)
       ]);
 
       const questionsData = await questionsRes.json();
       const testsData = await testsRes.json();
       const candidatesData = await candidatesRes.json();
 
+      console.log('Fetched questions:', questionsData.length);
       setQuestions(questionsData);
       setTests(testsData);
       setCandidates(candidatesData);
@@ -84,6 +88,14 @@ export default function HRDashboard() {
               <p className="text-gray-600">Manage assessments and candidates</p>
             </div>
             <div className="flex items-center gap-4">
+              <button 
+                onClick={fetchData} 
+                className="btn-secondary"
+                disabled={loading}
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                Refresh
+              </button>
               <Link href="/assessments/questions/new" className="btn-primary">
                 <Plus className="w-4 h-4 mr-2" />
                 New Question
@@ -131,25 +143,42 @@ export default function HRDashboard() {
               </Link>
             </div>
             <div className="space-y-4">
-              {questions.slice(0, 5).map((question) => (
-                <div key={question.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{getQuestionTypeIcon(question.type)}</span>
-                    <div>
-                      <p className="font-medium text-gray-900">{question.title}</p>
-                      <p className="text-sm text-gray-600">{question.type} • {question.points} points</p>
+              {questions.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="text-gray-400 mb-4">
+                    <FileText className="w-12 h-12 mx-auto" />
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">No questions yet</h3>
+                  <p className="text-gray-600 mb-4">Create your first question to get started</p>
+                  <Link href="/assessments/questions/new" className="btn-primary">
+                    <Plus className="w-4 h-4 mr-2" />
+                    Create Question
+                  </Link>
+                </div>
+              ) : (
+                questions
+                  .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+                  .slice(0, 5)
+                  .map((question) => (
+                  <div key={question.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{getQuestionTypeIcon(question.type)}</span>
+                      <div>
+                        <p className="font-medium text-gray-900">{question.title}</p>
+                        <p className="text-sm text-gray-600">{question.type} • {question.points} points</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Link href={`/assessments/questions/${question.id}`} className="text-gray-400 hover:text-gray-600">
+                        <Eye className="w-4 h-4" />
+                      </Link>
+                      <Link href={`/assessments/questions/${question.id}/edit`} className="text-gray-400 hover:text-blue-600">
+                        <Edit className="w-4 h-4" />
+                      </Link>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Link href={`/assessments/questions/${question.id}`} className="text-gray-400 hover:text-gray-600">
-                      <Eye className="w-4 h-4" />
-                    </Link>
-                    <Link href={`/assessments/questions/${question.id}/edit`} className="text-gray-400 hover:text-blue-600">
-                      <Edit className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 

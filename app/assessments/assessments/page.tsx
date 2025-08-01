@@ -8,10 +8,12 @@ interface Assessment {
   id: string;
   title: string;
   description: string;
+  questions: string[];
   timeLimit: number;
   totalPoints: number;
   isActive: boolean;
   createdAt: string;
+  updatedAt: string;
 }
 
 export default function HRAssessmentsPage() {
@@ -24,7 +26,7 @@ export default function HRAssessmentsPage() {
 
   const fetchAssessments = async () => {
     try {
-      const response = await fetch('/api/assessment/quizzes');
+      const response = await fetch('/api/tests');
       if (response.ok) {
         const data = await response.json();
         setAssessments(data);
@@ -62,10 +64,10 @@ export default function HRAssessmentsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Assessments</h1>
-                      <Link
+          <Link
               href="/assessments/tests/new"
-              className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 flex items-center gap-2"
-            >
+            className="bg-primary-600 text-white px-4 py-2 rounded-md hover:bg-primary-700 flex items-center gap-2"
+          >
             <Plus className="w-4 h-4" />
             Create Assessment
           </Link>
@@ -89,6 +91,7 @@ export default function HRAssessmentsPage() {
               
               <div className="flex justify-between text-sm text-gray-500 mb-4">
                 <span>Time: {assessment.timeLimit} min</span>
+                <span>Questions: {assessment.questions.length}</span>
                 <span>Points: {assessment.totalPoints}</span>
               </div>
               
